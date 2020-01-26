@@ -1,0 +1,5 @@
+.idea/
+src/config/db.ini
+src/config/php_mail.ini
+src/config/ldap.ini
+auth_tokens.txt
