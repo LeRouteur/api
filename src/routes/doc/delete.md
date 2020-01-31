@@ -44,7 +44,7 @@ Calling this service permits to delete the specified user.
 
   ```javascript
     $.ajax({
-      url: "/api/users/delete",
+      url: "https://secureconnect.online/api/users/delete",
       dataType: "json",
       type : "POST",
       data: {username:"john.doe", auth_token:"ageneratedtokenthatwillbegiventoyou123"},

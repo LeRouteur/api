@@ -23,8 +23,8 @@ Calling this service permits to modify user password.
    `email=[email]`
    -> Email of the user
    
-   `token=[ageneratedtokenthatwillbegiventoyou123]`
-   -> User token (gave in mail)
+   `token=[activationtokensupersecret1234]`
+   -> User token
 
 * **Data Params:**
 
@@ -45,6 +45,9 @@ Calling this service permits to modify user password.
 
   * **Code:** 400 Bad Request<br />
     **Content:** `{"error":"Bad Request"}`
+    
+  * **Code:** 400 Bad Request<br />
+    **Content:** `{"error":"Password Does Not Meet The Requirements"}`
 
   * **Code:** 401 Unauthorized<br/>
     **Content:** `{"error":"Password Does Not Match"}`
@@ -56,7 +59,7 @@ Calling this service permits to modify user password.
 
   ```javascript
     $.ajax({
-      url: "/api/users/recovery/email=test@example.com&token=activationtokensupersecret1234",
+      url: "https://secureconnect.online/api/users/recovery/email=test@example.com&token=activationtokensupersecret1234",
       dataType: "json",
       type : "POST",
       data:{password:"SuperSecretP@ssword123", password_conf:"SuperSecretP@ssword123", auth_token:"ageneratedtokenthatwillbegiventoyou123"},
@@ -68,4 +71,4 @@ Calling this service permits to modify user password.
 
 * **Notes:**
 
-  Calling this service sends a mail to the concerned user, and should only be called when user will change his password. The link in the mail will redirect to the frontend.
+  This service needs the URL params AND the body to work. The URL params are given in the email that has been sent to the user.

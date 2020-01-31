@@ -34,6 +34,10 @@ Calling this service permits to register a new user.
     
     `zip` => 1111
 
+    `password` => SuperSecretP@ssword123
+
+    `password_conf` => SuperSecretP@ssword123
+
 * **Success Response:**
 
   * **Code:** 201 Created<br />
@@ -50,14 +54,17 @@ Calling this service permits to register a new user.
   * **Code:** 400 Bad Request<br />
     **Content:** `{"error":"*value* Invalid"}` -> if there are errors while validating POST data, you will see into the *value* field the name of the invalid key.
 
+  * **Code:** 400 Bad Request<br />
+    **Content:** `{"error":"Password Does Not Meet The Requirements"}`
+    
 * **Sample Call:**
 
   ```javascript
     $.ajax({
-      url: "/api/users/add",
+      url: "https://secureconnect.online/api/users/add",
       dataType: "json",
       type : "POST",
-      data: {lastname:"Doe", firstname:"John", mail:"test@example.com", sex:"man", address:"Living Dead 3", city:"Zombotron", zip:"1111"},
+      data: {lastname:"Doe", firstname:"John", mail:"test@example.com", sex:"man", address:"Living Dead 3", city:"Zombotron", zip:"1111", password:"SuperSecr      etP@ssword123", password_conf:"SuperSecretP@ssword123"},
       success : function(r) {
         console.log(r);
       }

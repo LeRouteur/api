@@ -33,6 +33,8 @@ Calling this service permits to update informations about a user.
     `city` => Zombotron
     
     `zip` => 1111
+    
+    `auth_token` => ageneratedtokenthatwillbegiventoyou123
 
 * **Success Response:**
 
@@ -48,10 +50,10 @@ Calling this service permits to update informations about a user.
 
   ```javascript
     $.ajax({
-      url: "/api/users/update",
+      url: "https://secureconnect.online/api/users/update",
       dataType: "json",
       type : "POST",
-      data: {lastname:"Doe", firstname:"John", mail:"test@example.com", sex:"man", address:"Living Dead 3", city:"Zombotron", zip:"111111"},
+      data: {lastname:"Doe",firstname:"John",mail:"test@example.com",sex:"man",address:"Living Dead 3",city:"Zombotron",zip:"111111",auth_token:"ageneratedtokenthatwillbegiventoyou123"},
       success : function(r) {
         console.log(r);
       }

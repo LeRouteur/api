@@ -41,7 +41,7 @@ Calling this service permits to send an email to the concerned user with a link 
 
   ```javascript
     $.ajax({
-      url: "/api/auth/sendmail",
+      url: "https://secureconnect.online/api/auth/sendmail",
       dataType: "json",
       type : "POST",
       data: {mail:"test@example.com", auth_token:"ageneratedtokenthatwillbegiventoyou123"},

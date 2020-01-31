@@ -99,7 +99,7 @@ class Model_register
             );
             if ($req) {
                 $this->accountConfirmation($validFormData);
-                $this->sendMail($validFormData);
+                //$this->sendMail($validFormData);
                 return true;
             } else {
                 return false;
@@ -167,8 +167,8 @@ class Model_register
         Nous vous confirmons la réception de votre enregistrement sur le site Web de SecureConnect Online, votre
         solution de sécurité informatique.<br/><br/>
         <b>Votre compte requiert une activation.</b><br/><br/>
-        Merci de bien vouloir cliquer sur ce lien ou de le copier/coller
-        dans un navigateur afin de l'activer :<br/><br/>
+	Merci de bien vouloir cliquer sur ce lien ou de le copier/coller dans un navigateur afin de l'activer :
+	<br/><br/>
         https://secureconnect.online/api/auth/activation/email=" . $encoded_email . "&token=" . $encoded_key . "
         <br/>
         <br/>       

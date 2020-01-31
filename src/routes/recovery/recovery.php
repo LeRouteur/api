@@ -29,11 +29,19 @@ class recovery
         // Validate the data
         if (filter_var($email, FILTER_VALIDATE_EMAIL, FILTER_SANITIZE_EMAIL)) {
             $valid_email = $email;
-        }
+	}
 
-        if (filter_var($password, FILTER_SANITIZE_STRING)) {
-            $valid_password = $this->hashPass($password);
-        }
+	// Validate password strength
+	$uppercase = preg_match('@[A-Z]@', $password);
+	$lowercase = preg_match('@[a-z]@', $password);
+	$number    = preg_match('@[0-9]@', $password);
+	$specialChars = preg_match('@[^\w]@', $password);
+
+	if ($uppercase && $lowercase && $number && strlen($password) >= 8) {
+	    $valid_password = $this->hashPass($password);	
+	} else {
+	    $this->result = '{"error":"Password Does Not Meet The Requirements"}';
+	}
 
         // Call the function to check if the user exists in DB
         $this->result = $this->model->updateFields($valid_password, $valid_email);

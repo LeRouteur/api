@@ -44,11 +44,21 @@ class Register
             if ($password == $password_conf) {
                 $final_password = $password;
 
-                // Remove password and password conf from the array, and insert the valid password in it
-                array_splice($formData, 8);
+                $uppercase = preg_match('@[A-Z]@', $final_password);
+                $lowercase = preg_match('@[a-z]@', $final_password);
+                $number    = preg_match('@[0-9]@', $final_password);
+                //$specialChars = preg_match('@[^\w]@', $password);
 
-                // Add the correct password in the array (it will be hashed)
-                $formData[] = $final_password;
+                if ($uppercase && $lowercase && $number && strlen($final_password) >= 8) {
+                    // Password is valid
+                    // Remove password and password conf from the array, and insert the valid password in it
+                    array_splice($formData, 8);
+
+                    // Add the correct password in the array (it will be hashed)
+                    $formData[] = $final_password;
+                } else {
+                    $this->result = $this->error_return->returnError("pass_req");
+                }
 
             } else {
                 // If password isn't correct, delete the array and print error

@@ -8,6 +8,8 @@ You will here find the official documentation of my Slim3 REST API for the TIP.
   
   [Login](https://secureconnect.online/api/doc/login "Login")
   
+  [Logout](https://secureconnect.online/api/doc/logout "Logout")
+  
   [Register](https://secureconnect.online/api/doc/register "Register")
   
   [Show User](https://secureconnect.online/api/doc/show_user "Show User")

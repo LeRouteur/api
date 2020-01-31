@@ -28,8 +28,8 @@ Calling this service permits the activation of the specified user account.
   * **Code:** 200 OK<br />
     **Content:** `{"success":"Activation Successful"}`
 
-* **Code:** 200 OK<br/>
-  **Content:** `{"error":"Already Enabled"}`
+  * **Code:** 200 OK<br/>
+    **Content:** `{"error":"Already Enabled"}`
  
 * **Error Response:**
 
@@ -40,7 +40,7 @@ Calling this service permits the activation of the specified user account.
 
   ```javascript
     $.ajax({
-      url: "/api/auth/activation",
+      url: "https://secureconnect.online/api/auth/activation",
       dataType: "json",
       type : "GET",
       data: 'log=test@example.com&key=c960c122316900482a6ded6c51181614',

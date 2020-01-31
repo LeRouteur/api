@@ -62,7 +62,7 @@ class send_mail_recovery
         $message = $sex_message . ",<br/>
         Nous avons reçu une demande de changement de mot de passe de votre part.<br/><br/>
         <b>Veuillez cliquer ou copier/coller le lien ci-dessous dans un navigateur et suivre les instructions à l'écran.</b><br/><br/>
-        https://secureconnect.online/api/recovery
+        https://secureconnect.online/api/recovery?mail=" . $encoded_email . "&token=" . $encoded_token . "
         <br/>
         <br/>       
         ---------------<br/>

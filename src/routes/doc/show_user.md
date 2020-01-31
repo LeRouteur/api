@@ -25,7 +25,7 @@ Calling this service will return informations about a user by its mail.
 * **Success Response:**
 
   * **Code:** 200 OK<br />
-    **Content:** `[{"lastname":"Doe","firstname":"John","email":"test@example.com","sex":"man","address":"Living Dead 3","city":"Zombotron","postal_code":"111111","sub_status":"0"}]`
+    **Content:** `[{"lastname":"Doe","firstname":"John","email":"test@example.com","sex":"man","address":"Living Dead 3","city":"Zombotron","postal_code":"111111","sub_status":"0","ldap_username":"johndoe"}]`
  
 * **Error Response:**
 
@@ -36,7 +36,7 @@ Calling this service will return informations about a user by its mail.
 
   ```javascript
     $.ajax({
-      url: "/api/users/request/email=test@example.com&auth_token=ageneratedtokenthatwillbegiventoyou123",
+      url: "https://secureconnect.online/api/users/request/email=test@example.com&auth_token=ageneratedtokenthatwillbegiventoyou123",
       dataType: "json",
       type : "GET",
       success : function(r) {

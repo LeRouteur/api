@@ -43,17 +43,6 @@ class auth
                 } elseif ($temp['authorized'] === true) {
                     $this->result['authorized'] = true;
                 }
-
-            /**
-            } elseif (strlen($user_token) === 60) {
-                $temp = $this->model->authenticateUser($user_token, $email, 60);
-
-                if ($temp['error']) {
-                    $this->result['error_db'] = $temp['error'];
-                } elseif ($temp['authorized'] === true) {
-                    $this->result['authorized'] = true;
-                }
-            */
             } else {
                 $this->result['error'] = '{"error":"Bad Token"}';
             }

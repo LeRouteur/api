@@ -59,6 +59,10 @@ class doc
                 $delete = file_get_contents("../src/routes/doc/delete.md");
                 $this->result = $this->Parsedown->text($delete);
                 break;
+            case "logout":
+                $logout = file_get_contents("../src/routes/doc/logout.md");
+                $this->result = $this->Parsedown->text($logout);
+                break;
         }
         return $this->result;
     }

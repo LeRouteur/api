@@ -20,6 +20,7 @@ require "../src/routes/delete/delete.php";
 require "../src/routes/send_mail_subscription/send_mail_sub.php";
 require "../src/config/research_mail.php";
 require "../src/routes/register/model_add_ldap_username.php";
+require "../src/routes/logout/logout.php";
 require_once "../src/routes/recovery/recovery.php";
 include "../src/config/Parsedown.php";
 include "../src/config/ldap.php";
@@ -32,7 +33,7 @@ include "../src/config/ldap.php";
 
 $configuration = [
     'settings' => [
-        'displayErrorDetails' => true,
+        'displayErrorDetails' => false,
     ],
 ];
 
@@ -109,7 +110,7 @@ $app->get('/api[/doc/{file}]', function (Request $request, Response $response, $
         $response = $response->withStatus(200)->withBody($body);
     } else {
         $file = $args['file'];
-        if ($file === "activation" || $file === "login" || $file === "register" || $file === "show_user" || $file === "subscription" || $file === "update" || $file === "send_email" || $file === "recovery" || $file === "delete") {
+        if ($file === "activation" || $file === "login" || $file === "register" || $file === "show_user" || $file === "subscription" || $file === "update" || $file === "send_email" || $file === "recovery" || $file === "delete" || $file === "logout") {
 
             // Instantiate the Doc class with the Parsedown instance
             $doc = new Doc($this->parsedown);
@@ -248,6 +249,23 @@ $app->post('/api/auth/sendmail', function (Request $request, Response $response)
     return $response;
 });
 
+/**
+ * Route for logout.
+ * @param Request $request
+ * @param Response $response
+ * @return Response
+ */
+$app->get('/api/auth/logout', function (Request $request, Response $response) {
+    // Logout the user
+	$logout = new Logout();
+	if (strpos($logout, "error")) {
+        $response = $response->withStatus(400)->withJson($logout);
+    } else {
+	    $response = $response->withStatus(200)->withJson($logout);
+    }
+	return $response;
+});
+
 /**********************************************************************************************************************/
 
 /**
@@ -321,7 +339,7 @@ $app->post('/api/users/add', function (Request $request, Response $response) {
     if (empty($errors)) {
         // No errors, user does not exist
         $check_existence = $register->registerStatus($validFormData);
-        //$check_existence = true;
+       // $check_existence = true;
         if ($check_existence) {
 
             // User inserted in the DB, we can now add it to the text file for LDAP insertion
@@ -338,7 +356,7 @@ $app->post('/api/users/add', function (Request $request, Response $response) {
                 // Return the error with a 400
                 $response = $response->withStatus(400)->withJson($result_ldap);
             } else {
-                var_dump($result_ldap);
+                //var_dump($result_ldap);
                 // Add the LDAP username in the created field of the DB
                 $add_username = new Model_add_ldap_username($this->pdo, $result_ldap, $validFormData[2]);
                 $result_db = $add_username->addUsername();

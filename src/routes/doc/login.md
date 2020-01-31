@@ -12,7 +12,7 @@ Calling this service permits to log in the user.
 
 * **Method:**
   
-  /api/users/login
+  /api/auth/login
 
   `POST`
 
@@ -32,7 +32,7 @@ Calling this service permits to log in the user.
 * **Error Response:**
 
   * **Code:** 401 Unauthorized<br/>
-  **Content:** `{"error":"Username Or Password Is Incorrect"}`
+    **Content:** `{"error":"Username Or Password Is Incorrect"}`
 
   * **Code:** 400 Bad Request<br/>
     **Content:** `{"error":"Bad Request"}`
@@ -41,7 +41,7 @@ Calling this service permits to log in the user.
 
   ```javascript
     $.ajax({
-      url: "/api/auth/login",
+      url: "https://secureconnect.online/api/auth/login",
       dataType: "json",
       type : "POST",
       data: {mail:"test@example.com", password:"SuperSecretP@ssword"},
