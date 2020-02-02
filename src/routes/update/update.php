@@ -1,14 +1,16 @@
 <?php
 
+/** This file contains the required methods to receive and validate the data received from the POST request.
+ * @author Cyril Buchs
+ * @version 2.5
+ */
+
 session_start();
 
 require_once "model_update.php";
 
 class update
 {
-    /**
-     * Declare a global var email that will store the content of the index email from the $_SESSION.
-     */
     protected $email;
     protected $model;
     protected $error_return;
@@ -18,6 +20,11 @@ class update
     private $auth_token;
     private $user_token;
 
+    /**
+     * update constructor.
+     * @param PDO $pdo
+     * @param $auth_token
+     */
     public function __construct(PDO $pdo, $auth_token)
     {
         $this->result = array();
@@ -35,7 +42,11 @@ class update
         $this->user_token = $auth_token;
     }
 
-    public function checkToken($formData)
+    /**
+     * Method used to validate the auth_token.
+     * @return bool|string
+     */
+    public function checkToken()
     {
         if ($this->auth_token === $this->user_token) {
             return true;

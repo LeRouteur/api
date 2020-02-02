@@ -1,5 +1,9 @@
 <?php
 
+/** This file contains the required methods to delete a user from the DB.
+ * @author Cyril Buchs
+ * @version 1.3
+ */
 
 class delete
 {
@@ -8,6 +12,12 @@ class delete
     private $result;
     private $auth_token;
 
+    /**
+     * delete constructor.
+     * @param PDO $pdo
+     * @param $username
+     * @param $auth_token
+     */
     public function __construct(PDO $pdo, $username, $auth_token)
     {
         $this->pdo = $pdo;

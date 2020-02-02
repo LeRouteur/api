@@ -1,5 +1,10 @@
 <?php
 
+/** This file contains the required methods to send an email to the user with a link to recover his password.
+ * @author Cyril Buchs
+ * @version 2.0
+ */
+
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 

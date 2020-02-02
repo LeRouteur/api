@@ -1,5 +1,10 @@
 <?php
 
+/** This file contains the required methods to send an email to the user after he paid for a new subscription.
+ * @author Cyril Buchs
+ * @version 1.2
+ */
+
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 

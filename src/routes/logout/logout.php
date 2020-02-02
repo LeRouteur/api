@@ -1,10 +1,18 @@
 <?php
 
+/** This file contains the required methods
+ * @author Cyril Buchs
+ * @version 1.0
+ */
+
 session_start();
 
 class Logout
 {
 
+    /**
+     * Logout constructor.
+     */
     public function __construct()
     {
         $result = "";

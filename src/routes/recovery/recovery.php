@@ -1,5 +1,10 @@
 <?php
 
+/** This file contains the required methods to receive and validate the form data of the password recovery.
+ * @author Cyril Buchs
+ * @version 1.6
+ */
+
 require_once "model_recovery.php";
 
 class recovery

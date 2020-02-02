@@ -1,6 +1,6 @@
 <?php
 /**
- * This file contains the required functions to insert valid POST data in the database.
+ * This file contains the required functions to insert valid form data in the database.
  * @author Cyril Buchs
  * @version 1.7
  */

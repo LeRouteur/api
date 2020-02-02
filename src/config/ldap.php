@@ -1,5 +1,11 @@
 <?php
 
+/** This file contains the required methods to realize actions with the AD of the TIP.
+ * @author Cyril Buchs
+ * @version 2.3
+ */
+
+
 require "research_status.php";
 
 class Ldap
@@ -41,7 +47,6 @@ class Ldap
 
         $unhashed_pass = $this->validFormData[8];
 
-        //$adduserAD["cn"] = $username;
         $adduserAD["givenname"] = ucwords($firstname);
         $adduserAD["sn"] = ucwords($lastname);
         $adduserAD["sAMAccountName"] = $username;
@@ -77,7 +82,6 @@ class Ldap
                     // If status is true, it means that the user does not exist.
                     if ($user_status) {
                         // User does not exists, OK for creation. Return false
-                        //$adduserAD_new["cn"] = $username_new;
                         $adduserAD_new["givenname"] = ucwords($firstname);
                         $adduserAD_new["sn"] = ucwords($lastname);
                         $adduserAD_new["sAMAccountName"] = $username_new;
@@ -90,37 +94,29 @@ class Ldap
                         // Add street address
                         $adduserAD_new['streetAddress'] = $this->validFormData[4];
 
-                        // Check if sAM already exist in the file. If not, let things process. Else, return an error.
-                        /**if (strpos(file_get_contents("../src/config/user.txt"), $adduserAD_new['sAMAccountName']) !== false) {
-                            // File content the sAM, we return an error.
-                            $this->result = '{"error":"User Already Registered"}';
-                        } else {*/
+                        $handle = fopen('../src/config/user.txt', 'a+');
+                        if (flock($handle, LOCK_EX)) {
+                            fwrite($handle, $adduserAD_new['givenname'] . ",");
+                            fwrite($handle, $adduserAD_new['sn'] . ",");
+                            fwrite($handle, $adduserAD_new['sAMAccountName'] . ",");
+                            fwrite($handle, $adduserAD_new['userPrincipalName'] . ",");
+                            fwrite($handle, $adduserAD_new['displayname'] . ",");
+                            fwrite($handle, $adduserAD_new['userPassword'] . ",");
+                            fwrite($handle, $adduserAD_new['postalCode'] . ",");
+                            fwrite($handle, $adduserAD_new['l'] . ",");
+                            $req = fwrite($handle, $adduserAD_new['streetAddress'] . PHP_EOL);
+                            flock($handle, LOCK_UN);
+                        } else {
+                            echo "Could not lock the file !";
+                        }
 
-                            $handle = fopen('../src/config/user.txt', 'a+');
-                            if (flock($handle, LOCK_EX)) {
-                                //fwrite($handle, $adduserAD_new['cn'] . ",");
-                                fwrite($handle, $adduserAD_new['givenname'] . ",");
-                                fwrite($handle, $adduserAD_new['sn'] . ",");
-                                fwrite($handle, $adduserAD_new['sAMAccountName'] . ",");
-                                fwrite($handle, $adduserAD_new['userPrincipalName'] . ",");
-                                fwrite($handle, $adduserAD_new['displayname'] . ",");
-                                fwrite($handle, $adduserAD_new['userPassword'] . ",");
-                                fwrite($handle, $adduserAD_new['postalCode'] . ",");
-                                fwrite($handle, $adduserAD_new['l'] . ",");
-                                $req = fwrite($handle, $adduserAD_new['streetAddress'] . PHP_EOL);
-                                flock($handle, LOCK_UN);
-                            } else {
-                                echo "Could not lock the file !";
-                            }
-
-                            if (!$req) {
-                                //echo "yeet";
-                                $this->result = '{"error":"Contact Administrator"}';
-                            } else {
-                                fclose($handle);
-                                $this->result = $username_new;
-                            }
-                        //}
+                        // If request is true, we close the handle of the file and we return the username. Else, we return an error
+                        if (!$req) {
+                            $this->result = '{"error":"Contact Administrator"}';
+                        } else {
+                            fclose($handle);
+                            $this->result = $username_new;
+                        }
                         break;
                     } else {
                         // User exists, increasing the number that will be put after the name.
@@ -129,39 +125,29 @@ class Ldap
                     }
                 }
             } else {
+                $handle = fopen('../src/config/user.txt', 'a+');
+                if (flock($handle, LOCK_EX)) {
+                    PHP_EOL;
+                    fwrite($handle, $adduserAD['givenname'] . ",");
+                    fwrite($handle, $adduserAD['sn'] . ",");
+                    fwrite($handle, $adduserAD['sAMAccountName'] . ",");
+                    fwrite($handle, $adduserAD['userPrincipalName'] . ",");
+                    fwrite($handle, $adduserAD['displayname'] . ",");
+                    fwrite($handle, $adduserAD['userPassword'] . ",");
+                    fwrite($handle, $adduserAD['postalCode'] . ",");
+                    fwrite($handle, $adduserAD['l'] . ",");
+                    $req_base = fwrite($handle, $adduserAD['streetAddress'] . PHP_EOL);
 
-                // Check if sAM already exist in the file. If not, let things process. Else, return an error.
-                /**if (strpos(file_get_contents("../src/config/user.txt"), $adduserAD['sAMAccountName']) !== false) {
-                    // File content the sAM, we return an error.
-                    $this->result = '{"error":"User Already Registered"}';
-                } else {*/
-
-                    $handle = fopen('../src/config/user.txt', 'a+');
-                    if (flock($handle, LOCK_EX)) {
-                        PHP_EOL;
-                        //fwrite($handle, $adduserAD['cn'] . ",");
-                        fwrite($handle, $adduserAD['givenname'] . ",");
-                        fwrite($handle, $adduserAD['sn'] . ",");
-                        fwrite($handle, $adduserAD['sAMAccountName'] . ",");
-                        fwrite($handle, $adduserAD['userPrincipalName'] . ",");
-                        fwrite($handle, $adduserAD['displayname'] . ",");
-                        fwrite($handle, $adduserAD['userPassword'] . ",");
-                        fwrite($handle, $adduserAD['postalCode'] . ",");
-                        fwrite($handle, $adduserAD['l'] . ",");
-                        $req_base = fwrite($handle, $adduserAD['streetAddress'] . PHP_EOL);
-
-                        if (!$req_base) {
-                            // Insertion unsuccessful, we should prevent the user
-                            $this->result = '{"error":"Contact Administrator"}';
-                        } else {
-                            fclose($handle);
-                            $this->result = $username;
-                        }
+                    if (!$req_base) {
+                        // Insertion unsuccessful, we should prevent the user
+                        $this->result = '{"error":"Contact Administrator"}';
                     } else {
-                        echo "Could not lock the file !";
+                        fclose($handle);
+                        $this->result = $username;
                     }
-                //}
-
+                } else {
+                    echo "Could not lock the file !";
+                }
             }
         } else {
             $this->result = '{"error":"UPN Should Be Unique"}';

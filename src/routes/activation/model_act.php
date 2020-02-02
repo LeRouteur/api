@@ -41,7 +41,6 @@ class Model_act
         }
 
         // Testing the value of $activation_status.
-
         // If the value in the column of the activation status is 1 (account already enabled), we redirect to another page.
         if ($activation_status == '1') {
             $result .= '{"error":"Already Enabled"}';

@@ -1,11 +1,19 @@
 <?php
 
+/** This file contains the required methods to update the subscription status of a user.
+ * @author Cyril Buchs
+ * @version 1.0
+ */
 
 class model_sub
 {
     protected $pdo;
     protected $result_db;
 
+    /**
+     * model_sub constructor.
+     * @param PDO $pdo
+     */
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
@@ -15,6 +23,12 @@ class model_sub
         );
     }
 
+    /**
+     * Method used to update the sub_status of a user.
+     * @param $new_status
+     * @param $email
+     * @return array
+     */
     public function updateStatus($new_status, $email)
     {
         try {

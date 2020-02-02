@@ -1,5 +1,7 @@
 <?php
 
+/** This file contains the required methods to return the data from the documentation. */
+
 class doc
 {
     private $result;

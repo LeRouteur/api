@@ -1,5 +1,10 @@
 <?php
 
+/** This file contains the required methods to receive and validate the form data for registering a user.
+ * @author Cyril Buchs
+ * @version 1.6
+ */
+
 require_once "model_register.php";
 require "error_return.php";
 

@@ -1,5 +1,7 @@
 <?php
 
+/** This file contains the required methods to get and validate the token for password recovery. */
+
 require "recovery/recovery.php";
 require "auth/model_auth.php";
 
@@ -10,6 +12,10 @@ class auth
     private $model;
     private $auth_token;
 
+    /**
+     * auth constructor.
+     * @param PDO $pdo
+     */
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
@@ -26,7 +32,6 @@ class auth
      * Method used to check if the token correspond to a specific pattern.
      * The token should :
      * - equal 40 chars to be considered as a "token" in the DB
-     * - equal 60 chars to be considered as a "token_login" in the DB
      * @param $user_token
      * @param $email
      * @param $auth_token

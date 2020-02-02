@@ -1,5 +1,10 @@
 <?php
 
+/** This file contains the required methods to research a user.
+ * @author Cyril Buchs
+ * @version 1.7
+ */
+
 class Research
 {
     protected $pdo;

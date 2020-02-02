@@ -1,15 +1,29 @@
 <?php
 
+/** This file contains the required methods to update the password of the user.
+ * @author Cyril Buchs
+ * @version 1.2
+ */
 
 class model_recovery
 {
     protected $pdo;
 
+    /**
+     * model_recovery constructor.
+     * @param PDO $pdo
+     */
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
     }
 
+    /**
+     * Method used to modify the user password.
+     * @param $pass
+     * @param $session_email
+     * @return string
+     */
     public function updateFields($pass, $session_email)
     {
         try {

@@ -1,5 +1,9 @@
 <?php
 
+/** This file contains the required methods to update the user data.
+ * @author Cyril Buchs
+ * @version 1.3
+ */
 
 class model_update
 {
