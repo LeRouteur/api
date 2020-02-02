@@ -52,7 +52,7 @@ class model_login
                         $this->result_login = '{"error":"Username Or Password Is Incorrect"}';
                     }
                 } else {
-                    $this->result_login = '{"error":"Username Or Password Is Incorrect"}';
+                    $this->result_login = '{"error":"Account Is Not Enabled"}';
                 }
             }
         } catch (PDOException $e) {
