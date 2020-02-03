@@ -18,6 +18,10 @@ Add then 3 files in src/config, named :
 * php_mail.ini => credentials for mail server
 Please read the code to find which parameters you should put in the ini files.
 
+You should then install Slim. Run this command in the root of the project :
+
+```composer require slim/slim:^3.0```
+
 # How Does It Work ?
 When a user wants to register, the API will register it in the database and in a text file. This text file will contain the data for an LDAP insertion with a PowerShell script. I will provide this script in a future release.
 
