@@ -7,8 +7,6 @@ Calling this service permits the activation of the specified user account.
   https://secureconnect.online/api/auth/activation
 
 * **Method:**
-  
-  /api/auth/activation/log={log}&key={key}
 
   `GET`
 

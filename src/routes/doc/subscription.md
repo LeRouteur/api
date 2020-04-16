@@ -8,11 +8,9 @@ Calling this service permits to change user subscription status.
 
 * **URL**
 
-  https://secureconnect.online/api/users/subscription
+  https://secureconnect.online/api/user/subscription
 
 * **Method:**
-  
-  /api/users/subscription
 
   `POST`
 
@@ -45,7 +43,7 @@ Calling this service permits to change user subscription status.
 
   ```javascript
     $.ajax({
-      url: "https://secureconnect.online/api/users/update",
+      url: "https://secureconnect.online/api/user/update",
       dataType: "json",
       type : "POST",
       data: {status:"3", auth_token:"ageneratedtokenthatwillbegiventoyou123", mail:"test@example.com", username:"john.doe"},

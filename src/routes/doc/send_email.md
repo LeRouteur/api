@@ -11,8 +11,6 @@ Calling this service permits to send an email to the concerned user with a link 
   https://secureconnect.online/api/auth/sendmail
 
 * **Method:**
-  
-  /api/auth/sendmail
 
   `POST`
 

@@ -8,11 +8,9 @@ Calling this service permits to modify user password.
 
 * **URL**
 
-  https://secureconnect.online/api/users/recovery
+  https://secureconnect.online/api/user/recovery
 
 * **Method:**
-  
-  /api/users/recovery/email=test@example.com&token=5875db50d38c2aa8e21829955e7804218d3af327
 
   `POST`
 
@@ -59,7 +57,7 @@ Calling this service permits to modify user password.
 
   ```javascript
     $.ajax({
-      url: "https://secureconnect.online/api/users/recovery/email=test@example.com&token=activationtokensupersecret1234",
+      url: "https://secureconnect.online/api/user/recovery/email=test@example.com&token=activationtokensupersecret1234",
       dataType: "json",
       type : "POST",
       data:{password:"SuperSecretP@ssword123", password_conf:"SuperSecretP@ssword123", auth_token:"ageneratedtokenthatwillbegiventoyou123"},

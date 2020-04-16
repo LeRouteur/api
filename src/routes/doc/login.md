@@ -11,8 +11,6 @@ Calling this service permits to log in the user.
   https://secureconnect.online/api/auth/login
 
 * **Method:**
-  
-  /api/auth/login
 
   `POST`
 

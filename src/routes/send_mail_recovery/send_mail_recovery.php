@@ -8,7 +8,7 @@
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
-class send_mail_recovery
+class Send_mail_recovery
 {
     protected $email_settings;
 

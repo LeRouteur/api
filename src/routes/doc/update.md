@@ -8,11 +8,9 @@ Calling this service permits to update informations about a user.
 
 * **URL**
 
-  https://secureconnect.online/api/users/update
+  https://secureconnect.online/api/user/update
 
 * **Method:**
-  
-  /api/users/update
 
   `POST`
 
@@ -50,7 +48,7 @@ Calling this service permits to update informations about a user.
 
   ```javascript
     $.ajax({
-      url: "https://secureconnect.online/api/users/update",
+      url: "https://secureconnect.online/api/user/update",
       dataType: "json",
       type : "POST",
       data: {lastname:"Doe",firstname:"John",mail:"test@example.com",sex:"man",address:"Living Dead 3",city:"Zombotron",zip:"111111",auth_token:"ageneratedtokenthatwillbegiventoyou123"},

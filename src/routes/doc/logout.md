@@ -7,8 +7,6 @@ Calling this service permits to log out the user.
   https://secureconnect.online/api/auth/logout
 
 * **Method:**
-  
-  /api/auth/logout
 
   `GET`
 

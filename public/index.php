@@ -33,7 +33,7 @@ include "../src/config/ldap.php";
 
 $configuration = [
     'settings' => [
-        'displayErrorDetails' => false,
+        'displayErrorDetails' => true,
     ],
 ];
 
@@ -216,7 +216,7 @@ $app->post('/api/auth/sendmail', function (Request $request, Response $response)
         $auth_token = $data['auth_token'];
 
         // Instantiate the Sned_mail_recovery class with e-mail settings
-        $send_mail = new send_mail_recovery($this->mail);
+        $send_mail = new Send_mail_recovery($this->mail);
 
         // Call the method checkToken with auth_token
         $status = $send_mail->checkToken($auth_token);
@@ -278,7 +278,7 @@ $app->get('/api/auth/logout', function (Request $request, Response $response) {
  * @param Response $response
  * @return Response
  */
-$app->get('/api/users/request/email={email}&auth_token={auth_token}', function (Request $request, Response $response, $args) {
+$app->get('/api/user/request/email={email}&auth_token={auth_token}', function (Request $request, Response $response, $args) {
 
     // Check if args are empty
     if (!empty($args) && $args['email'] && $args['auth_token']) {
@@ -323,7 +323,7 @@ $app->get('/api/users/request/email={email}&auth_token={auth_token}', function (
  * @param Response $response
  * @return Response
  */
-$app->post('/api/users/add', function (Request $request, Response $response) {
+$app->post('/api/user/add', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
 
     // Instantiate the Register class with PDO instance and mail credentials
@@ -339,7 +339,8 @@ $app->post('/api/users/add', function (Request $request, Response $response) {
     if (empty($errors)) {
         // No errors, user does not exist
         $check_existence = $register->registerStatus($validFormData);
-       // $check_existence = true;
+        //$check_existence = true;
+
         if ($check_existence) {
 
             // User inserted in the DB, we can now add it to the text file for LDAP insertion
@@ -388,7 +389,7 @@ $app->post('/api/users/add', function (Request $request, Response $response) {
  * @return Response
  */
 // Flemme de commenter, personne va le lire de toute façon...
-$app->post('/api/users/update', function (Request $request, Response $response) {
+$app->post('/api/user/update', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
     if (!$data['auth_token']) {
         $response = $response->withStatus(400)->withJson('{"error":"Bad Request"}');
@@ -416,7 +417,7 @@ $app->post('/api/users/update', function (Request $request, Response $response) 
  * @param Response $response
  * @return Response
  */
-$app->post('/api/users/recovery/email={mail}&token={token}', function (Request $request, Response $response, $args) {
+$app->post('/api/user/recovery/email={mail}&token={token}', function (Request $request, Response $response, $args) {
     $email = $args['mail'];
     $user_token = $args['token'];
 
@@ -467,7 +468,7 @@ $app->post('/api/users/recovery/email={mail}&token={token}', function (Request $
  * @param Response $response
  * @return Response
  */
-$app->post('/api/users/subscription', function (Request $request, Response $response) {
+$app->post('/api/user/subscription', function (Request $request, Response $response) {
     // Get the request body and parse it, then assign it to a local var
     $data = $request->getParsedBody();
 
@@ -548,7 +549,7 @@ $app->post('/api/users/subscription', function (Request $request, Response $resp
  * @param Response $response
  * @return Response
  */
-$app->post('/api/users/delete', function (Request $request, Response $response) {
+$app->post('/api/user/delete', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
 
     // Assign parsed values to local vars

@@ -8,12 +8,10 @@ Calling this service permits to register a new user.
 
 * **URL**
 
-  https://secureconnect.online/api/users/add
+  https://secureconnect.online/api/user/add
 
 * **Method:**
   
-  /api/users/add
-
   `POST`
 
 * **Data Params:**
@@ -61,7 +59,7 @@ Calling this service permits to register a new user.
 
   ```javascript
     $.ajax({
-      url: "https://secureconnect.online/api/users/add",
+      url: "https://secureconnect.online/api/user/add",
       dataType: "json",
       type : "POST",
       data: {lastname:"Doe", firstname:"John", mail:"test@example.com", sex:"man", address:"Living Dead 3", city:"Zombotron", zip:"1111", password:"SuperSecr      etP@ssword123", password_conf:"SuperSecretP@ssword123"},

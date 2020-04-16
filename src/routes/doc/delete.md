@@ -8,11 +8,9 @@ Calling this service permits to delete the specified user.
 
 * **URL**
 
-  https://secureconnect.online/api/users/delete
+  https://secureconnect.online/api/user/delete
 
 * **Method:**
-  
-  /api/users/delete
 
   `POST`
 
@@ -44,7 +42,7 @@ Calling this service permits to delete the specified user.
 
   ```javascript
     $.ajax({
-      url: "https://secureconnect.online/api/users/delete",
+      url: "https://secureconnect.online/api/user/delete",
       dataType: "json",
       type : "POST",
       data: {username:"john.doe", auth_token:"ageneratedtokenthatwillbegiventoyou123"},

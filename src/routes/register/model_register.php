@@ -99,7 +99,7 @@ class Model_register
             );
             if ($req) {
                 $this->accountConfirmation($validFormData);
-                //$this->sendMail($validFormData);
+                $this->sendMail($validFormData);
                 return true;
             } else {
                 return false;
