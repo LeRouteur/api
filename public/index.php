@@ -499,12 +499,13 @@ $app->post('/api/user/subscription', function (Request $request, Response $respo
                 $ldap = new Ldap($this->ldap, $this->pdo, "");
 
                 // Call the addUserToGroup method with LDAP username, and assign the result to a local var
+                //$result_ldap = $ldap->addUserToGroup($username);
                 $result_ldap = $ldap->addUserToGroup($username);
 
                 // Check if $result_ldap contains error. If yes, we return an HTTP response with a 400 and the error. If not, we continue processing
                 if (strpos($result_ldap, "error")) {
                     $response = $response->withStatus(400)->withJson($result_ldap);
-                } else {
+                } elseif ($result_ldap = true) {
 
                     // Instantiate the Research_mail class with PDO instance
                     $research = new Research_mail($this->pdo);
@@ -524,6 +525,8 @@ $app->post('/api/user/subscription', function (Request $request, Response $respo
                     } else {
                         $response = $response->withStatus(500)->withJson('{"error":"Contact Administrator"}');
                     }
+                } else {
+                    $response = $response->withStatus(500)->withJson($result_ldap);
                 }
                 // Check if there is an error from the controller, and return it with a 400
             } elseif (!empty($response_db['error'])) {

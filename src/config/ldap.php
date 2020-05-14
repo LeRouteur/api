@@ -299,6 +299,56 @@ class Ldap
 
             // On se place au niveau du groupe, pas de l'utilisateur !
 
+            $handle = fopen('../src/config/group.txt', 'a+');
+
+            if ($status[0]['sub_status'] === '0') {
+                $this->result_user_add = '{"error":"User Has No Active Subscription"}';
+            } elseif ($status[0]['sub_status'] === '1') {
+                if (flock($handle, LOCK_EX)) {
+                    fwrite($handle, "VPNG1" . ",");
+                    $req = fwrite($handle, "$username" . PHP_EOL);
+                    flock($handle, LOCK_UN);
+                    if ($req !== false) {
+                        $this->result_user_add = true;
+                    } else {
+                        $this->result_user_add = '{"error":"Cannot Add User In Group"}';
+                    }
+                } else {
+                    echo "Could not lock the file !";
+                }
+            } elseif ($status[0]['sub_status'] === '2') {
+                if (flock($handle, LOCK_EX)) {
+                    fwrite($handle, "VPNG2" . ",");
+                    $req = fwrite($handle, "$username" . PHP_EOL);
+                    flock($handle, LOCK_UN);
+                    if ($req !== false) {
+                        $this->result_user_add = true;
+                    } else {
+                        $this->result_user_add = '{"error":"Cannot Add User In Group"}';
+                    }
+                } else {
+                    echo "Could not lock the file !";
+                }
+            } elseif ($status[0]['sub_status'] === '3') {
+                if (flock($handle, LOCK_EX)) {
+                    fwrite($handle, "VPNG3" . ",");
+                    $req = fwrite($handle, "$username" . PHP_EOL);
+                    flock($handle, LOCK_UN);
+                    if ($req !== false) {
+                        $this->result_user_add = true;
+                    } else {
+                        $this->result_user_add = '{"error":"Cannot Add User In Group"}';
+                    }
+                } else {
+                    echo "Could not lock the file !";
+                }
+            } elseif ($status[0]['sub_status'] === '4') {
+                $this->result_user_add = '{"error":"You Are Already An Administrator"}';
+            } else {
+                $this->result_user_add = $status;
+            }
+
+            /**
             if ($status[0]['sub_status'] === '0') {
                 $this->result_user_add = '{"error":"User Has No Active Subscription"}';
             } elseif ($status[0]['sub_status'] === '1') {
@@ -333,6 +383,7 @@ class Ldap
             } else {
                 $this->result_user_add = $status;
             }
+            */
         }
         return $this->result_user_add;
     }
