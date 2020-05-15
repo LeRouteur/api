@@ -352,10 +352,19 @@ $app->post('/api/user/add', function (Request $request, Response $response) {
             $result_ldap = $ldap->addUser();
 
             // If $result_ldap contains error, it means that the user exists OR there is a communication error between the API and the LDAP server
-            // We so return a 400 with the error. Else, we continue processing
+            // We so return a 400 with the error. The user is deleted from the DB.
+            // Else, we continue processing
             if (strpos($result_ldap, "error")) {
-                // Return the error with a 400
-                $response = $response->withStatus(400)->withJson($result_ldap);
+                // Delete user from the DB
+                $delete = new Delete($this->pdo, "", "");
+                $delete_status = $delete->deleteDbUser($validFormData[2]);
+
+                if (strpos($delete_status, "error")) {
+                    $response = $response->withStatus(500)->withJson($delete_status);
+                } else {
+                    // Return the error with a 400
+                    $response = $response->withStatus(400)->withJson($result_ldap);
+                }
             } else {
                 //var_dump($result_ldap);
                 // Add the LDAP username in the created field of the DB
