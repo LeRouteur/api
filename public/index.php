@@ -2,10 +2,10 @@
 
 require "../vendor/autoload.php";
 
-use \Psr\Http\Message\ResponseInterface as Response;
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Slim\App;
-use \Slim\Container;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\App;
+use Slim\Container;
 
 require "../src/routes/register/register.php";
 require "../src/routes/update/update.php";
@@ -257,13 +257,13 @@ $app->post('/api/auth/sendmail', function (Request $request, Response $response)
  */
 $app->get('/api/auth/logout', function (Request $request, Response $response) {
     // Logout the user
-	$logout = new Logout();
-	if (strpos($logout, "error")) {
+    $logout = new Logout();
+    if (strpos($logout, "error")) {
         $response = $response->withStatus(400)->withJson($logout);
     } else {
-	    $response = $response->withStatus(200)->withJson($logout);
+        $response = $response->withStatus(200)->withJson($logout);
     }
-	return $response;
+    return $response;
 });
 
 /**********************************************************************************************************************/
@@ -400,20 +400,42 @@ $app->post('/api/user/add', function (Request $request, Response $response) {
 // Flemme de commenter, personne va le lire de toute façon...
 $app->post('/api/user/update', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
+
     if (!$data['auth_token']) {
         $response = $response->withStatus(400)->withJson('{"error":"Bad Request"}');
     } else {
-        $auth_token = $data['auth_token'];
-        $update = new Update($this->pdo, $auth_token);
-        $token_status = $update->checkToken($data);
-        if ($token_status) {
-            $validFormData = $update->getFormDataInfos($data);
-            $errors = $update->returnError();
-            if (empty($errors)) {
-                $response_db = $update->updateFields($validFormData);
-                $response = $response->withStatus(200)->withJson($response_db);
-            } else {
-                $response = $response->withStatus(400)->withJson($errors);
+
+        if (!$data{'ldap_username'}) {
+            $response = $response->withStatus(400)->withJson('{"error":"Bad Request"}');
+
+        } else {
+            $auth_token = $data['auth_token'];
+            $update = new Update($this->pdo, $auth_token);
+            $token_status = $update->checkToken();
+
+            if ($token_status) {
+                $validFormData = $update->getFormDataInfos($data);
+                $errors = $update->returnError();
+
+                if (empty($errors)) {
+                    $response_db = $update->updateFields($validFormData);
+
+                    if (strpos($response_db, "error")) {
+                        $response = $response->withStatus(400)->withJson('{"error":"Cannot Update User Informations"}');
+                    } else {
+                        $username = $data['ldap_username'];
+                        $ldap = new Ldap($this->ldap, $this->pdo, $validFormData);
+                        $ldap_status = $ldap->modifyUserInfos($username);
+
+                        if (strpos($ldap_status, "error")) {
+                            $response = $response->withStatus(400)->withJson($ldap_status);
+                        } else {
+                            $response = $response->withStatus(200)->withJson('{"sucess":"User Updated"}');
+                        }
+                    }
+                } else {
+                    $response = $response->withStatus(400)->withJson($errors);
+                }
             }
         }
     }
@@ -430,11 +452,12 @@ $app->post('/api/user/recovery/email={mail}&token={token}', function (Request $r
     $email = $args['mail'];
     $user_token = $args['token'];
 
-    // Get the parsed response body
+    // Get the parsed request body
     $data = $request->getParsedBody();
 
     // Check if $data is empty and if keys exists
-    if (!empty($data) && $data['password'] && $data['password_conf'] && $data['auth_token']) {
+    if (!empty($data) && $data['ldap_username'] && $data['password'] && $data['password_conf'] && $data['auth_token']) {
+        $ldap_username = $data['ldap_username'];
         $password = $data['password'];
         $password_conf = $data['password_conf'];
         $auth_token = $data['auth_token'];
@@ -448,17 +471,26 @@ $app->post('/api/user/recovery/email={mail}&token={token}', function (Request $r
             // Checking if the token is the different tokens are corresponding, and storing the result in an array
             $auth_settings = $auth->checkToken($user_token, $email, $auth_token);
 
-            // Check if there is an error, and return it to the user
+            // Check if there is an error, and return it to the user if so
             if ($auth_settings['error']) {
                 $response = $response->withStatus(200)->withJson($auth_settings['error']);
             } else {
                 // We continue processing the recovery
                 $recovery = new Recovery($this->pdo, $auth_settings);
-                $response_yeet = $recovery->getFormDataRecovery($email, $password);
-                if ($response_yeet === '{"error":"Contact Administrator"}') {
-                    $response = $response->withStatus(500)->withJson($response_yeet);
+                $response_db = $recovery->getFormDataRecovery($email, $password);
+
+                if ($response_db === '{"error":"Contact Administrator"}') {
+                    $response = $response->withStatus(500)->withJson($response_db);
                 } else {
-                    $response = $response->withStatus(200)->withJson($response_yeet);
+                    // Write data to text file for PowerShell insertion
+                    $ldap = new Ldap($this->ldap, $this->pdo, "");
+                    $result_ldap = $ldap->updateUserPassword($ldap_username, $password);
+
+                    if (strpos($result_ldap, "error")) {
+                        $response = $response->withStatus(400)->withJson($result_ldap);
+                    } else {
+                        $response = $response->withStatus(200)->withJson('{"success":"Password Modified"}');
+                    }
                 }
             }
         } else {
@@ -561,42 +593,43 @@ $app->post('/api/user/subscription', function (Request $request, Response $respo
  * @param Response $response
  * @return Response
  */
-$app->post('/api/user/delete', function (Request $request, Response $response) {
-    $data = $request->getParsedBody();
+$app->delete('/api/user/delete/user={id}&auth_token={auth_token}', function (Request $request, Response $response, $args) {
+    $username = $args['id'];
+    $auth_token = $args['auth_token'];
+    $null_data = array();
 
     // Assign parsed values to local vars
-    if (!empty($data) && $data['username'] && $data['auth_token']) {
-        $username = $data['username'];
-        $auth_token = $data['auth_token'];
-        $null_data = array();
+    /**if (!empty($data) && $data['ldap_username'] && $data['auth_token']) {
+     * $username = $data['ldap_username'];
+     * $auth_token = $data['auth_token'];
+     */
 
-        // Instantiate the Delete class with PDO instance, username and auth_token as parameters
-        $delete = new Delete($this->pdo, $username, $auth_token);
+    // Instantiate the Delete class with PDO instance, username and auth_token as parameters
+    $delete = new Delete($this->pdo, $username, $auth_token);
 
-        // Call the method deleteUser and assign the return value to a local var
-        $result = $delete->deleteUser();
+    // Call the method deleteUser and assign the return value to a local var
+    $result = $delete->deleteUser();
 
-        // Check if user was successfully deleted ($result). If yes, we continue processing the deletion in the LDAP annuary
-        // If not, we crache un message d'erreur with a 400 status code.
-        if ($result) {
+    // Check if user was successfully deleted ($result). If yes, we continue processing the deletion in the LDAP annuary
+    // If not, we crache un message d'erreur with a 400 status code.
+    if ($result) {
 
-            // Instantiate the Ldap class with LDAP credentials and an empty array
-            $ldap = new Ldap($this->ldap, $this->pdo, $null_data);
+        // Instantiate the Ldap class with LDAP credentials and an empty array
+        $ldap = new Ldap($this->ldap, $this->pdo, $null_data);
 
-            // Call the deleteUser method with username and auth_token (double verification)
-            $response_db = $ldap->deleteUser($username, $auth_token);
+        // Call the deleteUser method with username
+        $response_db = $ldap->deleteUser($username);
 
-            // Check the status of the deletion ($response_db)
-            // If it contains an error, return it with a 400 status.
-            // If not, return the response with a 200 OK.
-            if ($response_db === '{"error":"Bad Request"}' || $response_db === '{"error":"User Does Not Exist"}') {
-                $response = $response->withStatus(400)->withJson($response_db);
-            } else {
-                $response = $response->withStatus(200)->withJson($response_db);
-            }
+        // Check the status of the deletion ($response_db)
+        // If it contains an error, return it with a 400 status.
+        // If not, return the response with a 200 OK.
+        if ($response_db === '{"error":"Bad Request"}' || $response_db === '{"error":"User Does Not Exist"}') {
+            $response = $response->withStatus(400)->withJson($response_db);
         } else {
-            $response = $response->withStatus(500)->withJson($result);
+            $response = $response->withStatus(200)->withJson('{"success":"User Deleted"}');
         }
+    } else {
+        $response = $response->withStatus(500)->withJson($result);
     }
     return $response;
 });

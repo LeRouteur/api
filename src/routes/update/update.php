@@ -64,7 +64,7 @@ class update
     public function getFormDataInfos($data)
     {
         if (!empty($data)) {
-            $formDataInfos = [$data["lastname"], $data["firstname"], $data["sex"], $data["address"], $data["zip"], $data["city"]];
+            $formDataInfos = [$data["lastname"], $data["firstname"], $data["sex"], $data["address"], $data["zip"], $data["city"], $data['ldap_username']];
 
             // Trim all spaces
             if (!empty($formDataInfos)) {
@@ -135,6 +135,9 @@ class update
             $city = ucwords($city);
             $caseFormData[] = $city;
 
+            // Add LDAP username (no validation)
+            $ldap_username = $formDataInfos[6];
+
             // Check if vars are empty
             if (empty($caseFormData[0]) || empty($caseFormData[1]) || empty($caseFormData[2]) || empty($caseFormData[3]) ||
                 empty($caseFormData[4]) || empty($caseFormData[5])) {
@@ -185,6 +188,11 @@ class update
             } else {
                 $this->result = $this->error_return->returnError("city");
             }
+
+            // Add LDAP username
+            $validFormData[] = $ldap_username;
+
+            var_dump($validFormData);
 
             return $validFormData;
 

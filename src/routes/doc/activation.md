@@ -14,12 +14,9 @@ Calling this service permits the activation of the specified user account.
 
    **Required:**
  
-   `log=[email]`
-   -> User Email
+   `log` => test@example.com
 
-   `key=[string]`
-   -> Token
-
+   `key` => ageneratedtokenthatwillbegiventoyou123
 
 * **Success Response:**
 

@@ -12,13 +12,13 @@ Calling this service permits to delete the specified user.
 
 * **Method:**
 
-  `POST`
+  `DELETE`
 
 * **Data Params:**
 
     *Key => Value*
 
-    `username` => john.doe
+    `ldap_username` => johndoe
 
     `auth_token` => ageneratedtokenthatwillbegiventoyou123
 

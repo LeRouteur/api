@@ -24,7 +24,7 @@ Calling this service permits to change user subscription status.
 
     `mail` => test@example.com
     
-    `username` => john.doe
+    `username` => johndoe
 
 * **Success Response:**
 

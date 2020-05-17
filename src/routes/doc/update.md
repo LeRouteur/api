@@ -32,6 +32,8 @@ Calling this service permits to update informations about a user.
     
     `zip` => 1111
     
+    `ldap_username` => johndoe
+    
     `auth_token` => ageneratedtokenthatwillbegiventoyou123
 
 * **Success Response:**

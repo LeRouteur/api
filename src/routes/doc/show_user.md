@@ -14,11 +14,9 @@ Calling this service will return informations about a user by its mail.
 
    **Required:**
  
-   `email=[email]`
-   -> Email of the user
+   `email` => test@example.com
    
-   `auth_token=[ageneratedtokenthatwillbegiventoyou123]`
-   -> Authentication token
+   `auth_token` => ageneratedtokenthatwillbegiventoyou123
 
 * **Success Response:**
 

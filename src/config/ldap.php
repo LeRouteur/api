@@ -178,7 +178,7 @@ class Ldap
             $upn = $this->validFormData[2];
 
             // We check if the username is already registered
-            $base_dn = 'cn=test,OU=Users-VPN,DC=secureconnect,DC=online';
+            $base_dn = 'cn=test,OU=Users-VPN,DC=secureconnect,DC=local';
 
             $adduserAD_new["sAMAccountName"] = 'test';
             $adduserAD_new['userPrincipalName'] = $upn;
@@ -233,7 +233,7 @@ class Ldap
             if ($username_new === "no") {
                 // We check if the username is already registered
 
-                $base_dn = 'OU=Users-VPN,DC=secureconnect,DC=online';
+                $base_dn = 'OU=Users-VPN,DC=secureconnect,DC=local';
                 $filter = "(&(objectCategory=person)(objectClass=user)(sAMAccountName=$username))";
                 $req = ldap_search($link_id, $base_dn, $filter);
                 $result = ldap_get_entries($link_id, $req);
@@ -250,7 +250,7 @@ class Ldap
                  * Ask to check if new username exists
                  */
             } else {
-                $base_dn = 'OU=Users-VPN,DC=secureconnect,DC=online';
+                $base_dn = 'OU=Users-VPN,DC=secureconnect,DC=local';
                 $filter = "(&(objectCategory=person)(objectClass=user)(sAMAccountName=$username_new))";
                 $req = ldap_search($link_id, $base_dn, $filter);
 
@@ -349,52 +349,50 @@ class Ldap
             }
 
             /**
-            if ($status[0]['sub_status'] === '0') {
-                $this->result_user_add = '{"error":"User Has No Active Subscription"}';
-            } elseif ($status[0]['sub_status'] === '1') {
-                $dn = 'cn=VPNG1,OU=Groups,OU=Users-VPN,DC=secureconnect,DC=online';
-                $group_info['member'] = 'cn=' . $username . ',OU=Users-VPN,DC=secureconnect,DC=online';
-                $req = ldap_mod_add($link_id, $dn, $group_info);
-                if ($req) {
-                    $this->result_user_add = true;
-                } else {
-                    $this->result_user_add = '{"error":"User Already In Group"}';
-                }
-            } elseif ($status[0]['sub_status'] === '2') {
-                $dn = 'cn=VPNG2,OU=Groups,OU=Users-VPN,DC=secureconnect,DC=online';
-                $group_info['member'] = 'cn=' . $username . ',OU=Users-VPN,DC=secureconnect,DC=online';
-                $req = ldap_mod_add($link_id, $dn, $group_info);
-                if ($req) {
-                    $this->result_user_add = true;
-                } else {
-                    $this->result_user_add = '{"error":"User Already In Group"}';
-                }
-            } elseif ($status[0]['sub_status'] === '3') {
-                $dn = 'cn=VPNG3,OU=Groups,OU=Users-VPN,DC=secureconnect,DC=online';
-                $group_info['member'] = 'cn=' . $username . ',OU=Users-VPN,DC=secureconnect,DC=online';
-                $req = ldap_mod_add($link_id, $dn, $group_info);
-                if ($req) {
-                    $this->result_user_add = true;
-                } else {
-                    $this->result_user_add = '{"error":"User Already In Group"}';
-                }
-            } elseif ($status[0]['sub_status'] === '4') {
-                $this->result_user_add = '{"error":"You Are Already An Administrator"}';
-            } else {
-                $this->result_user_add = $status;
-            }
-            */
+             * if ($status[0]['sub_status'] === '0') {
+             * $this->result_user_add = '{"error":"User Has No Active Subscription"}';
+             * } elseif ($status[0]['sub_status'] === '1') {
+             * $dn = 'cn=VPNG1,OU=Groups,OU=Users-VPN,DC=secureconnect,DC=online';
+             * $group_info['member'] = 'cn=' . $username . ',OU=Users-VPN,DC=secureconnect,DC=online';
+             * $req = ldap_mod_add($link_id, $dn, $group_info);
+             * if ($req) {
+             * $this->result_user_add = true;
+             * } else {
+             * $this->result_user_add = '{"error":"User Already In Group"}';
+             * }
+             * } elseif ($status[0]['sub_status'] === '2') {
+             * $dn = 'cn=VPNG2,OU=Groups,OU=Users-VPN,DC=secureconnect,DC=online';
+             * $group_info['member'] = 'cn=' . $username . ',OU=Users-VPN,DC=secureconnect,DC=online';
+             * $req = ldap_mod_add($link_id, $dn, $group_info);
+             * if ($req) {
+             * $this->result_user_add = true;
+             * } else {
+             * $this->result_user_add = '{"error":"User Already In Group"}';
+             * }
+             * } elseif ($status[0]['sub_status'] === '3') {
+             * $dn = 'cn=VPNG3,OU=Groups,OU=Users-VPN,DC=secureconnect,DC=online';
+             * $group_info['member'] = 'cn=' . $username . ',OU=Users-VPN,DC=secureconnect,DC=online';
+             * $req = ldap_mod_add($link_id, $dn, $group_info);
+             * if ($req) {
+             * $this->result_user_add = true;
+             * } else {
+             * $this->result_user_add = '{"error":"User Already In Group"}';
+             * }
+             * } elseif ($status[0]['sub_status'] === '4') {
+             * $this->result_user_add = '{"error":"You Are Already An Administrator"}';
+             * } else {
+             * $this->result_user_add = $status;
+             * }
+             */
         }
         return $this->result_user_add;
     }
 
     /**
-     * Method used to delete an user in the AD by it's username.
-     * @param $username
-     * @param $auth_token
-     * @return bool|string
+     * Method used to modify user AD informations.
+     * @return string
      */
-    public function deleteUser($username, $auth_token)
+    public function modifyUserInfos($username)
     {
         // LDAP variables
         $ldap_username = $this->ldap_creds['username'];
@@ -409,10 +407,127 @@ class Ldap
 
             ldap_bind($link_id, $ldap_username, $ldap_password);
 
+            $lastname = strtolower($this->validFormData[0]);
+            $firstname = strtolower($this->validFormData[1]);
+
+            $display_name = ucwords($firstname) . " " . ucwords($lastname);
+
+            //var_dump($this->validFormData);
+
+            $handle = fopen('../src/config/infos.txt', 'a+');
+
+            flock($handle, LOCK_EX);
+
+            fwrite($handle, ucwords($firstname) . ",");
+            fwrite($handle, ucwords($lastname) . ",");
+            fwrite($handle, $display_name . ",");
+            // Add street address
+            fwrite($handle, $this->validFormData[3] . ",");
+            // Add postal code
+            fwrite($handle, $this->validFormData[4] . ",");
+            // Add city
+            fwrite($handle, $this->validFormData[5] . ",");
+            // Add LDAP username
+            $req = fwrite($handle, $this->validFormData[6] . PHP_EOL);
+
+            flock($handle, LOCK_UN);
+
+            if ($req !== false) {
+                $this->result_user_add = true;
+            } else {
+                $this->result_user_add = '{"error":"Cannot Update User Informations"}';
+            }
+            ldap_close($link_id);
+        } else {
+            echo "Could not lock the file !";
+        }
+        return $this->result_user_add;
+    }
+
+    /**
+     * Method used to update user AD password.
+     * @param $username
+     * @param $password
+     * @return bool|string
+     */
+    public function updateUserPassword($username, $password)
+    {
+        // LDAP variables
+        $ldap_username = $this->ldap_creds['username'];
+        $ldap_password = $this->ldap_creds['password'];
+        $ldapuri = $this->ldap_creds['uri'];
+
+        // Connexion LDAP
+        $link_id = ldap_connect($ldapuri);
+        if ($link_id) {
+            ldap_set_option($link_id, LDAP_OPT_PROTOCOL_VERSION, 3);
+            ldap_set_option($link_id, LDAP_OPT_REFERRALS, 0);
+
+            ldap_bind($link_id, $ldap_username, $ldap_password);
+
+            $handle = fopen('../src/config/pass.txt', 'a+');
+
+            flock($handle, LOCK_EX);
+
+            // Write username and password to file
+            fwrite($handle, "$username" . ",");
+            $req = fwrite($handle, $password . PHP_EOL);
+
+            flock($handle, LOCK_UN);
+
+            if ($req !== false) {
+                $this->result_user_add = true;
+            } else {
+                $this->result_user_add = '{"error":"Cannot Update User Password"}';
+            }
+            ldap_close($link_id);
+        } else {
+            echo "Could not lock the file !";
+        }
+        return $this->result_user_add;
+    }
+
+    /**
+     * Method used to delete an user in the AD by it's username.
+     * @param $username
+     * @param $auth_token
+     * @return bool|string
+     */
+    public function deleteUser($username)
+    {
+        // LDAP variables
+        $ldap_username = $this->ldap_creds['username'];
+        $ldap_password = $this->ldap_creds['password'];
+        $ldapuri = $this->ldap_creds['uri'];
+
+        // Connexion LDAP
+        $link_id = ldap_connect($ldapuri);
+        if ($link_id) {
+            ldap_set_option($link_id, LDAP_OPT_PROTOCOL_VERSION, 3);
+            ldap_set_option($link_id, LDAP_OPT_REFERRALS, 0);
+
+            ldap_bind($link_id, $ldap_username, $ldap_password);
+
+            $handle = fopen('../src/config/delete.txt', 'a+');
+
+            flock($handle, LOCK_EX);
+
+            // Write username and password to file
+            $req = fwrite($handle, "$username" . PHP_EOL);
+
+            flock($handle, LOCK_UN);
+
+            if ($req !== false) {
+                $this->result_user_add = true;
+            } else {
+                $this->result_user_add = '{"error":"Cannot Delete User"}';
+            }
+            ldap_close($link_id);
+            /**
             // Check auth_token
             if ($this->auth_token === $auth_token) {
                 // Deletion of the user from the AD
-                $base_dn = 'cn=' . $username . ',OU=Users-VPN,DC=secureconnect,DC=online';
+                $base_dn = 'samaccountname=' . $username . ',OU=Users-VPN,DC=secureconnect,DC=local';
                 $req = ldap_delete($link_id, $base_dn);
                 if ($req) {
                     $this->result_delete = '{"success":"User Deleted"}';
@@ -423,6 +538,7 @@ class Ldap
             } else {
                 $this->result_delete = '{"error":"Bad Request"}';
             }
+             */
         }
         return $this->result_delete;
     }

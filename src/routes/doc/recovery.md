@@ -18,11 +18,9 @@ Calling this service permits to modify user password.
 
    **Required:**
  
-   `email=[email]`
-   -> Email of the user
+   `email` => test@example.com
    
-   `token=[activationtokensupersecret1234]`
-   -> User token
+   `token` => activationtokensupersecret123
 
 * **Data Params:**
 
